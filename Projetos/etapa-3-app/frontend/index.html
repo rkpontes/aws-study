@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aplicação AWS</title>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        main {
+            width: min(500px, calc(100% - 40px));
+            padding: 32px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #ff9900;
+            font-weight: bold;
+        }
+
+        pre {
+            padding: 16px;
+            overflow: auto;
+            background: #111827;
+            color: #e5e7eb;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Aplicação publicada na AWS</h1>
+
+        <p>O frontend está sendo servido pelo Nginx dentro da EC2.</p>
+
+        <button id="load-message">
+            Consultar backend
+        </button>
+
+        <pre id="result">Clique no botão para chamar a API.</pre>
+    </main>
+
+    <script>
+        const button = document.getElementById("load-message");
+        const result = document.getElementById("result");
+
+        button.addEventListener("click", async () => {
+            result.textContent = "Carregando...";
+
+            try {
+                const response = await fetch("/api/message");
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = `Erro: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
